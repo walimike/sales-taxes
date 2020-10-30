@@ -1,4 +1,16 @@
 # sales-taxes
+This is a CLI application for processing taxes for a given amount of input
+It is written in ruby
+
+## How to use it
+1. clone this repo and cd into `sales-taxes`
+2. run `ruby run.rb`
+3. You will be prompted to enter a commodity e.g. `1 box of imported chocolates at 11.25`
+4. Provide the commodities one by one as preempted by the app
+5. Once you are done, click enter with an empty line(the app provides instructions)
+
+## Expected behaviour
+The app then prints a receit depending on the user input
 
 ### Challenge
 

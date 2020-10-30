@@ -1,5 +1,6 @@
 class SalesTax
     @@sales_tax = 0
+    @@sub_total = 0
     @@commodities = Array.new
 
     def initiate
@@ -10,37 +11,71 @@ class SalesTax
 
     def add_item(commodity)
         if commodity.empty?
-            process_taxes @@commodities
+            self.process_payment 
         else
-            @@commodities << commodity
+            @@commodities << commodity.split(' at ')
             p 'Provide another commodity or leave blank to checkout'
             commodity = gets.chomp
-            self.add_item(commodity)
+            self.add_item commodity
         end
     end
 
-    def process_taxes(array)
-        if array.empty?
-            p 'No taxes'
-        else
-            array.each do |item|
-                self.fuzzy_look_up(item)
+    def process_payment
+        unless @@commodities.empty?
+            @@commodities.each do |item|
+                self.process_taxes item
             end
-            p @@sales_tax
+        end
+        self.calculate_total_amount
+        self.print_receipt
+    end
+
+    def process_taxes(item)
+        item[1] = item[1].to_f
+        if item[0].include? 'imported'
+            if self.is_essential item[0]
+                item_tax = self.calculate_tax(item[1] , 0.05)
+                item[1] += item_tax
+                @@sales_tax += item_tax
+            else
+                item_tax = self.calculate_tax(item[1] , 0.1) + self.calculate_tax(item[1] , 0.05)
+                item[1] += item_tax
+                @@sales_tax += item_tax
+            end
+        else
+            unless self.is_essential item[0]
+                item_tax = self.calculate_tax(item[1] , 0.1)
+                item[1] += item_tax
+                @@sales_tax += item_tax
+            end
         end
     end
 
-    def fuzzy_look_up(item)
-        if item.include? 'chocolate' or item.include? 'headache' or item.include? 'book'
-            res = item.split('at')
-            @@sales_tax += res[1].to_i * 0.05
-        else
-            res = item.split('at')
-            @@sales_tax += res[1].to_i * 0.1
+    def is_essential(item)
+        item.include? 'chocolate' or item.include? 'headache' or item.include? 'book'
+    end
+
+    def process_import_taxes(item)
+
+    end
+
+    def calculate_tax(amount, rate)
+        tax = amount * rate
+        (tax*20).round / 20.0
+    end
+
+    def calculate_total_amount
+        @@commodities.each do |item|
+            @@sub_total += item[1]
         end
+    end
+
+
+    def print_receipt
+        @@commodities.each do |commodity|
+            p " #{commodity[0]} : #{commodity[1].round(2)} "
+        end
+        p "Sales Taxes: #{@@sales_tax.round(2)}"
+        p "Total: #{@@sub_total}"
     end
 end
-
-
-instance = SalesTax.new
-instance.initiate
