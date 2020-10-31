@@ -6,7 +6,7 @@ class SalesTax
     def initiate
         p 'Provide commodity and price and press Enter'
         commodity = gets.chomp
-        self.add_item(commodity)    
+        self.add_item commodity 
     end
 
     def add_item(commodity)
@@ -34,19 +34,16 @@ class SalesTax
         item[1] = item[1].to_f
         if item[0].include? 'imported'
             if self.is_essential item[0]
-                item_tax = self.calculate_tax(item[1] , 0.05)
-                item[1] += item_tax
-                @@sales_tax += item_tax
+                item_tax = self.calculate_tax item , 0.05
+                self.calculate_tax_total item, item_tax
             else
-                item_tax = self.calculate_tax(item[1] , 0.1) + self.calculate_tax(item[1] , 0.05)
-                item[1] += item_tax
-                @@sales_tax += item_tax
+                item_tax = self.calculate_tax(item , 0.1) + self.calculate_tax(item , 0.05)
+                self.calculate_tax_total item, item_tax
             end
         else
             unless self.is_essential item[0]
-                item_tax = self.calculate_tax(item[1] , 0.1)
-                item[1] += item_tax
-                @@sales_tax += item_tax
+                item_tax = self.calculate_tax item , 0.1
+                self.calculate_tax_total item, item_tax
             end
         end
     end
@@ -55,12 +52,13 @@ class SalesTax
         item.include? 'chocolate' or item.include? 'headache' or item.include? 'book'
     end
 
-    def process_import_taxes(item)
-
+    def calculate_tax_total(item, item_tax )
+        item[1] += item_tax
+        @@sales_tax += item_tax
     end
 
-    def calculate_tax(amount, rate)
-        tax = amount * rate
+    def calculate_tax(item, rate)
+        tax = item[1] * rate
         (tax*20).round / 20.0
     end
 
@@ -69,7 +67,6 @@ class SalesTax
             @@sub_total += item[1]
         end
     end
-
 
     def print_receipt
         @@commodities.each do |commodity|
