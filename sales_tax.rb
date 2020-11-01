@@ -4,7 +4,8 @@ class SalesTax
     @@commodities = Array.new
 
     def initiate
-        p 'Provide commodity and price and press Enter'
+        p 'Provide item or leave blank to checkout'
+        print "> "
         commodity = gets.chomp
         self.add_item commodity 
     end
@@ -14,7 +15,7 @@ class SalesTax
             self.process_payment 
         else
             @@commodities << commodity.split(' at ')
-            p 'Provide another commodity or leave blank to checkout'
+            print "> "
             commodity = gets.chomp
             self.add_item commodity
         end
