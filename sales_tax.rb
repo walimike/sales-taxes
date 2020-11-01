@@ -14,7 +14,7 @@ class SalesTax
         if commodity.empty?
             self.process_payment 
         else
-            @@commodities << commodity.split(' at ')
+            self.add_commodity commodity
             print "> "
             commodity = gets.chomp
             self.add_item commodity
@@ -73,7 +73,23 @@ class SalesTax
         @@commodities.each do |commodity|
             p " #{commodity[0]} : #{commodity[1].round(2)} "
         end
-        p "Sales Taxes: #{@@sales_tax.round(2)}"
-        p "Total: #{@@sub_total}"
+        p "Sales Taxes: #{self.get_sales_tax}"
+        p "Total: #{self.get_sub_total}"
+    end
+
+    def add_commodity commodity
+        @@commodities << commodity.split(' at ')
+    end
+
+    def get_commodity
+        @@commodities
+    end
+
+    def get_sub_total
+        @@sub_total.round(2)
+    end
+
+    def get_sales_tax
+        @@sales_tax.round(2)
     end
 end
