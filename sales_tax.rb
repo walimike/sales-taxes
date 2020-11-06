@@ -1,11 +1,14 @@
 class SalesTax
-    attr_reader :commodities
-
+    
     def initialize
         @sales_tax = 0
         @sub_total = 0
         @commodities = Array.new
     end
+
+    attr_accessor :sales_tax
+    attr_accessor :sub_total
+    attr_reader :commodities
 
     def initiate
         p 'Provide item or leave blank to checkout'
@@ -59,7 +62,7 @@ class SalesTax
 
     def calculate_tax_total(item, item_tax )
         item[1] += item_tax
-        @sales_tax += item_tax
+        self.sales_tax += item_tax
     end
 
     def calculate_tax(item, rate)
@@ -69,7 +72,7 @@ class SalesTax
 
     def calculate_total_amount
         @commodities.each do |item|
-            @sub_total += item[1]
+            self.sub_total += item[1]
         end
     end
 
@@ -86,10 +89,10 @@ class SalesTax
     end
 
     def get_sub_total
-        @sub_total.round(2)
+        "%.2f" % self.sub_total.round(2)
     end
 
     def get_sales_tax
-        @sales_tax.round(2)
+        "%.2f" % self.sales_tax.round(2)
     end
 end
