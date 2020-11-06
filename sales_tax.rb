@@ -1,7 +1,11 @@
 class SalesTax
-    @@sales_tax = 0
-    @@sub_total = 0
-    @@commodities = Array.new
+    attr_reader :commodities
+
+    def initialize
+        @sales_tax = 0
+        @sub_total = 0
+        @commodities = Array.new
+    end
 
     def initiate
         p 'Provide item or leave blank to checkout'
@@ -22,8 +26,8 @@ class SalesTax
     end
 
     def process_payment
-        unless @@commodities.empty?
-            @@commodities.each do |item|
+        unless @commodities.empty?
+            @commodities.each do |item|
                 self.process_taxes item
             end
         end
@@ -55,7 +59,7 @@ class SalesTax
 
     def calculate_tax_total(item, item_tax )
         item[1] += item_tax
-        @@sales_tax += item_tax
+        @sales_tax += item_tax
     end
 
     def calculate_tax(item, rate)
@@ -64,32 +68,28 @@ class SalesTax
     end
 
     def calculate_total_amount
-        @@commodities.each do |item|
-            @@sub_total += item[1]
+        @commodities.each do |item|
+            @sub_total += item[1]
         end
     end
 
     def print_receipt
-        @@commodities.each do |commodity|
-            p " #{commodity[0]} : #{commodity[1].round(2)} "
+        @commodities.each do |commodity|
+            p " #{commodity[0]} : #{commodity[1].to_f.round(2)} "
         end
         p "Sales Taxes: #{self.get_sales_tax}"
         p "Total: #{self.get_sub_total}"
     end
 
     def add_commodity commodity
-        @@commodities << commodity.split(' at ')
-    end
-
-    def get_commodity
-        @@commodities
+        @commodities << commodity.split(' at ')
     end
 
     def get_sub_total
-        @@sub_total.round(2)
+        @sub_total.round(2)
     end
 
     def get_sales_tax
-        @@sales_tax.round(2)
+        @sales_tax.round(2)
     end
 end
