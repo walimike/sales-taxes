@@ -2,6 +2,9 @@
 This is a CLI application for processing taxes for a given amount of input
 It is written in ruby
 
+### Build Status
+[![Build Status](https://travis-ci.org/walimike/sales-taxes.svg?branch=main)](https://travis-ci.org/walimike/sales-taxes)
+
 ## How to use it
 1. clone this repo and cd into `sales-taxes`
 2. run `ruby run.rb`
